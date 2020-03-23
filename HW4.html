@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Group 1 HW4</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+  <script type="text/javascript">
+    function output_user_info(){
+      // use this
+      var x = document.getElementById('first_name').value;
+      var y = document.getElementById('middle_name').value;
+      var z = document.getElementById('last_name').value;
+
+      var g = document.getElementById('garlic_checkbox').checked;
+      var s = document.getElementById('shadow_checkbox').checked;
+      var c = document.getElementById('complexion_checkbox').checked;
+      
+      if (g == true) {
+        g = "Yes";
+      } else {
+         g = "No";
+      }
+
+      if (s == true) {
+        s = "Yes";
+      } else {
+         s = "No";
+      }
+
+      if(c == true)
+      {
+        c = "Yes";
+      } else {
+        c = "No";
+      }
+
+      
+      var gender = " ";
+      var m = document.getElementById('male_radio');
+      var f = document.getElementById('female_radio');
+      if (m.checked)
+      { gender = "Male";}
+
+      if (f.checked)
+      { gender = "Female";}
+
+
+
+      var table = document.getElementById("classmate_table");
+      // Create an empty <tr> element and add it to the 1st position of the table:
+      // BE CAREFUL!!! row 0 is our heading row
+   
+      var row = table.insertRow(1);
+      // Try this
+      // var row = table.insertRow(0);
+      // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+      var cell4 = row.insertCell(3);
+      var cell5 = row.insertCell(4);
+
+      // Add some text to the new cells:
+      cell1.innerHTML = x + " " + y + " " + z;
+      cell2.innerHTML = gender;
+      cell3.innerHTML = g;
+      cell4.innerHTML = s;
+      cell5.innerHTML = c;
+    } 
+    function delete_row(){
+      // delete the second row
+      document.getElementById("saving_table").deleteRow(1);
+    }
+    // based on https://stackoverflow.com/questions/10686888/delete-last-row-in-table
+    function delete_last_row(){
+      var table = document.getElementById('classmate_table');
+      var row_count = table.rows.length;
+
+      table.deleteRow(row_count -1);
+    }
+  </script>
+
+  <!-- Reference to Google Charts-->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> 
+  <script type = "text/javascript">
+
+    // Load google charts
+    google.charts.load('current', {
+      packages: ['corechart'],
+    }).then(function () {
+      $(document.getElementById('test')).click(function() {
+        
+        var choice = document.getElementById('mySelect').value;
+        var studentTable = document.getElementById('classmate_table');
+        var studentCount = 0;;
+        var vampireCount = 0;
+        var count = 0;
+
+        if(choice == 1)
+        {
+          for (var i = 1, row; row = studentTable.rows[i]; i++)
+          {
+            count = i;
+
+          }
+          
+            stu = count + 1;
+            var humans = Math.floor(Math.random() * stu);  // returns a random integer between 0 and the amount of students.
+            
+          if(humans == count)
+          {
+            vampireCount = 0;
+          }
+          else if(humans == 0)
+          {
+            vampireCount = count; // Chooses who is a vampire from the random number of non vampires
+          }
+          else
+          {
+            vampireCount = count - humans;
+          }
+              
+            
+
+          var data = google.visualization.arrayToDataTable([
+          ['Type', 'count'],
+          ['Humans', humans],
+          ['Vampires', vampireCount],
+          ]);
+
+        // Optional; add a title and set the width and height of the chart
+        var options = {'title':'Vampires In My Class', 'width':550, 'height':400};
+
+        // Display the chart inside the <div> element with id="piechart"
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+
+        }
+        else
+        {
+          var humans;
+          
+          for (var i = 0, row; row = studentTable.rows[i]; i++)
+          {
+            var total = 0;
+            count = i;
+            var garlic = row.cells[2].innerHTML;
+            var shadow = row.cells[3].innerHTML;
+            var complexion = row.cells[4].innerHTML;
+
+            if(garlic == "Yes")
+            {
+              total += 3;
+            }
+            if(shadow == "Yes")
+            {
+              total += 4;
+            }
+            if(complexion == "Yes")
+            {
+              total += 3;
+            }
+
+            if(total > 6)
+            {
+              vampireCount += 1;
+            }
+
+
+          }
+
+          humans = count - vampireCount;
+
+
+          var data = google.visualization.arrayToDataTable([
+          ['Type', 'count'],
+          ['Humans', humans],
+          ['Vampires', vampireCount],
+          ]);
+
+        // Optional; add a title and set the width and height of the chart
+        var options = {'title':'Vampires In My Class', 'width':550, 'height':400};
+
+        // Display the chart inside the <div> element with id="piechart"
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+
+        }
+        
+  });
+});
+      
+
+
+
+    function display_chosen_option()
+      {
+        var choice = document.getElementById('mySelect').value;
+        var studentTable = document.getElementById('classmate_table');
+        var studentCount = 0;
+        var vampireCount = 0;
+
+        // Chose Random
+        if(choice == 1)
+        {
+          for (var i = 0, row; row = table.rows[i]; i++)
+          {
+            studentCount += 1;
+          }
+
+          var nonVampireCount = Math.floor(Math.random() * count) + 1;  // returns a random integer between 1 and the amount of students.
+          vampireCount = studentCount - nonVampireCount; // Chooses who is a vampire from the random number of non vampires
+
+          generatePieChart(nonVampireCount, vampireCount);
+
+        }
+        else
+        {
+
+        }
+
+
+
+      }
+  
+  
+  </script>
+</head>
+<body>
+
+
+<div class="container">
+  <h2>Input Classmate Info</h2>
+  <form>
+    <div class="form-row">
+      <!-- md is short for Medium, >= 768 px -->
+      <div class="form-group col-md-4">
+        <label for="first_name">First Name</label>
+        <input type="text" class="form-control" id="first_name" placeholder="First Name">
+        
+      </div>
+
+      <!-- The .form-group class is the easiest way to add some structure to forms. It provides a flexible class that encourages proper grouping of labels, controls, optional help text, and form validation messaging. -->
+      <div class="form-group col-md-4">
+        <label for="middle_name">Middle Name</label>
+        <input type="text" class="form-control" id="middle_name" placeholder="Middle Name">
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="last_name">Last Name</label>
+        <input type="text" class="form-control" id="last_name" placeholder="Last Name">
+      </div>
+    </div>
+
+
+   <div class="form-row">
+    <h2>Gender</h2>
+      <div class="form-group col-md-12">
+        <div class="radio">
+          <!-- name shows this two buttons are in the same group-->
+          <label><input type="radio" name="optradio" id="male_radio" checked>Male</label>
+        </div>
+        <div class="radio">
+          <label><input type="radio" name="optradio" id="female_radio">Female</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+        <h2>Attributes</h2>
+      <!-- without this, your rows will not be aligned -->
+      <div class="form-group col-md-12">
+        <div class="checkbox">
+          <label><input type="checkbox" id="garlic_checkbox">Hates Garlic?</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" id="shadow_checkbox">No Shadow?</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" id="complexion_checkbox">Pale Complexion?</label>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+  <div class="container">
+        <!-- How to display all user input information as a paragraph? Finish the output_user_info function -->
+  <button class="btn btn-primary" onclick="output_user_info()">Add Classmate</button>
+    <table class="table table-bordered" id="classmate_table">
+       <caption>Classmate Info</caption>
+       <thead>
+         <tr>
+           <th>Name</th>
+           <th>Gender</th>
+           <th>Hates Garlic?</th>
+           <th>No Shadow?</th>
+           <th>Pale Complexion?</th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr>
+           <td>Tre</td>
+           <td>Male</td>
+           <td>Yes</td>
+           <td>Yes</td>
+           <td>No</td>
+         </tr>
+         <tr>
+           <td>Tiff</td>
+           <td>Female</td>
+           <td>No</td>
+           <td>Yes</td>
+           <td>No</td>
+         </tr>
+       </tbody>
+       <tfoot>
+        <tr>
+          <td>Thomas</td>
+          <td>Male</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>No</td>
+        </tr>
+       </tfoot>
+     </table>
+
+
+  
+  <p id="user_info"></p>
+</div>
+
+<div class="container">
+    <h2>Select Model</h2>
+  
+    <div class="form-group">
+      <label for="mySelect">Select Model Logic:</label>
+      <select class="form-control" id="mySelect">
+        <option value='1'>Random Guess</option>
+        <option value='2'>Threshold Based Method</option>
+      </select>   
+  
+      <!-- write a function to display chosen option with a pop up window. -->
+      <button type="button" id = "test">Who is a Vampire</button>    
+    </div>
+  
+  </div>
+
+  <div id="piechart"></div>
+
+</body>
+</html>
